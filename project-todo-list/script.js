@@ -68,7 +68,7 @@ listaOrdenada.addEventListener('click', (event) => {
 const riscaItemLista = (elemento) => {
   const itemLista = elemento;
   if (itemLista.style.textDecorationLine !== 'line-through') {
-    itemLista.style.color = 'gray';
+    itemLista.style.color = 'red';
     itemLista.style.textDecorationLine = 'line-through';
     itemLista.style.textDecorationColor = 'black';
     itemLista.classList.add('completed');
