@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Lista de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <header>Minha Lista de Tarefas</header>
+        <section id="p-funcionamento">
+            <p id="funcionamento">Clique duas vezes em um item para marcá-lo como completo</p>
+        </section>
+        <section id="entrada-de-dados">
+            <input type="text" name="texto-tarefa" id="texto-tarefa">
+            <button id="criar-tarefa">Adicionar</button>
+        </section>
+        <section id="saida-de-dados">
+            <ol id="lista-tarefas">
+            </ol>
+        </section>
+        <section id="editacao-dados">
+            <button id="remover-selecionado"><img src="img/cross-mark-on-black-circle-background_icon-icons.com_70513.png" alt="Botão X, para remover os selecionados" srcset=""></button>
+            <button id="mover-cima"><img src="img/arrow-up-on-a-black-circle-background_icon-icons.com_73668.png" alt="botão move para cima"></button>
+            <button id="mover-baixo"><img src="img/arrow-down-on-black-circular-background_icon-icons.com_73677.png" alt="botão move para baixo"></button>
+            <button id="remover-finalizados">Limpar Completos</button>
+            <button id="apaga-tudo">Limpar Lista</button>
+            <button id="salvar-tarefas">Salvar Lista</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Julio Matias. Todos os direitos reservados.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
