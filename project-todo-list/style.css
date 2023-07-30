@@ -132,6 +132,7 @@ input:focus {
 
 #remover-selecionado {
   border: transparent;
+  background-color: transparent;
 }
 
 #mover-cima {
