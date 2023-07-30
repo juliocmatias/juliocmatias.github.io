@@ -3,8 +3,6 @@ sectionFramePixels.id = 'pixel-board';
 const body = document.querySelector('body');
 const footer = document.querySelector('footer');
 body.insertBefore(sectionFramePixels, footer);
-const row = document.getElementsByClassName('row');
-// const colors = document.getElementsByClassName('color');
 const colors = document.querySelectorAll('.color');
 const pixel = document.getElementsByClassName('pixel');
 
@@ -22,6 +20,7 @@ const defaultClassName = 'Blue-Green';
 const paletteColor = () => {
   for (let index = 0; index < colors.length; index += 1) {
     const colorName = colors[index].innerHTML;
+    // console.log(colorName);
     const colorInfo = colorData.find((color) => color.name === colorName);
 
     colors[index].style.backgroundColor = colorInfo
@@ -32,37 +31,30 @@ const paletteColor = () => {
     colors[index].classList.remove(defaultClassName);
   }
 };
-
 paletteColor();
 
 const divLinePixel = [];
-
-// for para delimitar o tamanho do array divframePixel
+const newDivLinePixel = [];
 const delimitFrameLine = 5;
 
-const delimitArrayFrame = () => {
-  for (let index = delimitFrameLine; index >= 1; index -= 1) {
-    if (delimitFrameLine >= 5 && delimitFrameLine <= 30) {
-      const numberIndex = delimitFrameLine - index + 1;
+const delimitArrayFrame = (delimitLine) => {
+  for (let index = delimitLine; index >= 1; index -= 1) {
+    if (delimitLine >= 5) {
+      const numberIndex = delimitLine - index + 1;
       divLinePixel.push(numberIndex);
     }
   }
-  if (delimitFrameLine < 5) {
-    return window.alert('A linha e coluna do pixel deve conter no mínimo 5 elementos');
-  }
 };
-
-delimitArrayFrame();
-
+delimitArrayFrame(delimitFrameLine);
 // cria o quadro para as linhas e colunas dos pixels.
-
-const frameLine = () => {
-  for (let index = 0; index < divLinePixel.length; index += 1) {
+const row = document.getElementsByClassName('row');
+const frameLine = (array) => {
+  for (let index = 0; index < array.length; index += 1) {
     const line = document.createElement('div');
     line.className = 'row';
     line.style.maxHeight = '40px';
     sectionFramePixels.appendChild(line);
-    for (let indexColumn = 0; indexColumn < divLinePixel.length; indexColumn += 1) {
+    for (let indexColumn = 0; indexColumn < array.length; indexColumn += 1) {
       const pixelColumn = document.createElement('div');
       pixelColumn.className = 'pixel';
       pixelColumn.style.border = '1px solid black';
@@ -74,20 +66,18 @@ const frameLine = () => {
     }
   }
 };
-frameLine();
-
+frameLine(divLinePixel);
 // Cria uma função para salvar o desenho atual no localStorage
 const saveDrawingToLocalStorage = () => {
   const drawingData = [];
-  for (let index = 0; index < pixel.length; index += 1) {
-    const pixelColor = window.getComputedStyle(pixel[index]).backgroundColor;
+  const pixelStorage = document.getElementsByClassName('pixel');
+  for (let index = 0; index < pixelStorage.length; index += 1) {
+    const pixelColor = window.getComputedStyle(pixelStorage[index]).backgroundColor;
     drawingData.push(pixelColor);
   }
   localStorage.setItem('pixelBoard', JSON.stringify(drawingData));
 };
-
 // Cria uma função para rescuperar o desenho no localStorage
-
 const recoverDrawingFromLocalStorage = () => {
   const drawingData = JSON.parse(localStorage.getItem('pixelBoard'));
   if (drawingData) {
@@ -96,15 +86,12 @@ const recoverDrawingFromLocalStorage = () => {
     }
   }
 };
-
 // selecionar a cor da paleta
-
 let saveClickedColor = '';
 const getColor = (colorElement) => {
   for (let index = 0; index < colors.length; index += 1) {
     colors[index].classList.remove('selected');
   }
-
   const clickedColor = colorElement;
   clickedColor.classList.add('selected');
   const saveColor = window.getComputedStyle(clickedColor).backgroundColor;
@@ -118,39 +105,31 @@ const selectColor = () => {
     });
   }
 };
-
 selectColor();
-
 // preencher um pixel do quadro com a cor selecionada
-
 const paintPixel = (pixelSelected) => {
   if (!saveClickedColor) return;
   const pixelClicked = pixelSelected;
   pixelClicked.style.backgroundColor = saveClickedColor;
 };
-
-for (let index = 0; index < pixel.length; index += 1) {
-  pixel[index].addEventListener('click', () => {
-    const pixelSelected = pixel[index];
-    paintPixel(pixelSelected);
-    // chama a função para salvar as cores nos pixels clicados
-    saveDrawingToLocalStorage();
-  });
-}
-
-window.addEventListener('load', () => {
-  recoverDrawingFromLocalStorage();
-});
-
+const pixelSelect = () => {
+  for (let index = 0; index < pixel.length; index += 1) {
+    pixel[index].addEventListener('click', () => {
+      const pixelSelected = pixel[index];
+      paintPixel(pixelSelected);
+      // chama a função para salvar as cores nos pixels clicados
+      saveDrawingToLocalStorage();
+    });
+  }
+};
+pixelSelect();
 // limpa o quadro preenchendo a cor de todos seus pixels com branco
-
 const button = document.createElement('button');
 button.id = 'clear-board';
 button.innerText = 'Limpar';
 button.style.marginBottom = '15px';
 button.style.marginLeft = '2%';
 body.insertBefore(button, sectionFramePixels);
-
 button.addEventListener('click', () => {
   for (let index = 0; index < pixel.length; index += 1) {
     const resetPixel = pixel[index];
@@ -158,25 +137,81 @@ button.addEventListener('click', () => {
     localStorage.clear();
   }
 });
-
 // Adicione um botão para gerar cores aleatórias para a paleta de cores
-
-const buttonColor = document.createElement('button');
-buttonColor.id = 'button-random-color';
-buttonColor.innerText = 'Cores aleatórias';
-buttonColor.style.marginLeft = '42%';
-body.insertBefore(buttonColor, button);
+const buttonColors = document.createElement('button');
+buttonColors.id = 'button-random-color';
+buttonColors.innerText = 'Cores aleatórias';
+buttonColors.style.marginLeft = '2%';
+body.insertBefore(buttonColors, button);
 const randomColors = () => {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);
   const b = Math.floor(Math.random() * 256);
-
   return `rgb(${r}, ${g}, ${b})`;
 };
-
-buttonColor.addEventListener('click', () => {
+buttonColors.addEventListener('click', () => {
   for (let index = 0; index < colors.length; index += 1) {
     const randomColor = colors[index];
     randomColor.style.backgroundColor = randomColors();
   }
+});
+const buttonBoard = document.getElementById('generate-board');
+const input = document.getElementById('board-size');
+input.style.marginLeft = '35%';
+
+const clearBoard = () => {
+  sectionFramePixels.innerHTML = '';
+  divLinePixel.length = 0;
+  newDivLinePixel.length = 0;
+};
+// Crie uma função para gerar o quadro com o novo tamanho
+const generateBoard = (size) => {
+  let countSize = size;
+  if (countSize < 5) {
+    countSize = 5;
+  } else if (countSize > 50) {
+    countSize = 50;
+  }
+  for (let index = countSize; index >= 1; index -= 1) {
+    const numberIndex = countSize - index + 1;
+    newDivLinePixel.push(numberIndex);
+  }
+  frameLine(newDivLinePixel);
+  pixelSelect();
+  localStorage.setItem('boardSize', countSize);
+};
+// Recuperar o tamanho do board armazenado no localStorage
+const getBoardSizeFromLocalStorage = () => {
+  const boardSize = JSON.parse(localStorage.getItem('boardSize'));
+  return boardSize || 5; // Valor padrão 5 caso não exista no localStorage
+};
+// Adicione um ouvinte de eventos para o botão "VQV"
+buttonBoard.addEventListener('click', (event) => {
+  event.preventDefault();
+  clearBoard();
+  localStorage.removeItem('pixelBoard');
+  const inputValue = input.value;
+
+  if (inputValue === '') {
+    window.alert('Board inválido!');
+  }
+  generateBoard(inputValue);
+
+  input.value = '';
+});
+
+// Função para manter o tamanho do board ao recarregar a página
+const keepBoardSizeOnReload = () => {
+  const boardSize = getBoardSizeFromLocalStorage();
+  // input.value = boardSize;
+  clearBoard();
+  generateBoard(boardSize);
+  recoverDrawingFromLocalStorage();
+};
+
+// para recuperar localStorage assim que a pagina for carregada.
+
+window.addEventListener('load', () => {
+  recoverDrawingFromLocalStorage();
+  keepBoardSizeOnReload();
 });
